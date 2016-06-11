@@ -1,9 +1,17 @@
-var app = angular.module('IndoorMapping', ['ionic'])
+var app = angular.module('IndoorMapping', ['ionic','Devise'])
 
  app.config([
   '$stateProvider',
   '$urlRouterProvider',
-  function($stateProvider,$urlRouterProvider){
+  'AuthProvider',
+  function($stateProvider,$urlRouterProvider,AuthProvider){
+
+    AuthProvider.registerPath('http://indoor-mapping.os34.tech/visitors.json');
+    AuthProvider.registerMethod('POST');
+    AuthProvider.loginPath('http://indoor-mapping.os34.tech/visitors/sign_in.json');
+    AuthProvider.loginMethod('POST');
+
+
   $stateProvider
 
   .state('home',{
@@ -13,18 +21,58 @@ var app = angular.module('IndoorMapping', ['ionic'])
 
   .state('login',{
     url: '/login',
-    templateUrl: 'templates/login.html'
+    templateUrl: 'templates/login.html',
+    controller: 'AuthCtrl',
+    controllerAs: "authCtrl",
+    onEnter: ['$state', 'Auth', function($state, Auth) {
+                Auth.currentUser().then(function (){
+                  $state.go('/home');
+                })
+              }]
   })
 
   .state('register',{
     url: '/register',
-    templateUrl: 'templates/register.html'
+    templateUrl: 'templates/register.html',
+    controller: 'AuthCtrl',
+    controllerAs: "authCtrl",
+    onEnter: ['$state', 'Auth', function($state, Auth) {
+                Auth.currentUser().then(function (){
+                  $state.go('/home');
+                })
+              }]
   });
 
 
   $urlRouterProvider.otherwise('/home');
 }]);
 
+app.controller('AuthCtrl', [
+'$state',
+'Auth',
+function($state, Auth){
+   this.login = function() {
+    Auth.login(this.user).then(function(){
+      //console.log(data);
+      $state.go('home');
+    }, function(err){
+      alert(JSON.stringify(err));
+    });
+  };
+
+  this.isAuthenticated = function(){
+    return Auth.isAuthenticated();
+  }
+
+
+
+  this.register = function() {
+    Auth.register(this.user).then(function(){
+      $state.go('home');
+    });
+  };
+
+}]);
 
 
 app.run(function($ionicPlatform) {

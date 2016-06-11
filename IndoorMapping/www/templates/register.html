@@ -1,24 +1,32 @@
 <ion-view view-title="Register">
 <ion-content>
 	<div class="list">
+  <div ng-controller="AuthCtrl as authCtrl">
+  <form name="visitorForm" ng-submit="authCtrl.register()">
   <label class="item item-input item-stacked-label">
     <span class="input-label">Username</span>
-    <input type="text">
+    <input type="text" name="username" ng-model="authCtrl.user.username" required>
+    <span ng-show="visitorForm.username.$invalid && visitorForm.username.$dirty">Username is required *</span>
   </label>
   <label class="item item-input item-stacked-label">
     <span class="input-label">Email</span>
-    <input type="email">
+    <input type="email" name="email" ng-model="authCtrl.user.email" required>
+    <span ng-show="visitorForm.email.$invalid && visitorForm.email.$dirty">Email is required *</span>
   </label>
   <label class="item item-input item-stacked-label">
     <span class="input-label">Password</span>
-    <input type="password">
+    <input type="password" name="password" ng-model="authCtrl.user.password" required>
+    <span ng-show="visitorForm.password.$invalid && visitorForm.password.$dirty">Password is required *</span>
   </label>
   <label class="item item-input item-stacked-label">
     <span class="input-label">Date Of Birth</span>
-    <input type="date">
+    <input type="date" name="dob" ng-model="authCtrl.user.dob" required>
+    <span ng-show="visitorForm.dob.$invalid && visitorForm.dob.$dirty">DateOfBirth is required *</span>
   </label>
   <div align="center">
-<a href="" class="button button-medium button-positive">Register</a>
+  <input type="submit" class="button button-medium button-positive" ng-disabled="visitorForm.$invalid" value="Register">
+</div>
+</form>
 </div>
 </div>
 </ion-content>
