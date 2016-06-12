@@ -10,6 +10,7 @@
   /* @ngInject */
   function mapCtrl($rootScope, $ionicPlatform, $cordovaBeacon, Db) {
     var self = this;
+    self.svg = SVG('drawing').size('1000','1000');
     self.beacons = [{
       id: 'zone1',
       uuid: '73676723-7400-0000-FFFF-0000FFFF0005',
@@ -40,18 +41,26 @@
         var stateStr = state ? 'in' : 'out';
         // console.log('self.stateStr' + stateStr);
         // console.log(JSON.stringify(beacon));
-        console.log("did determine state for region " + JSON.stringify(pluginResult));
+        // console.log("did determine state for region " + JSON.stringify(pluginResult));
 
         //Write code to do whatever you want
       };
       delegate.didRangeBeaconsInRegion = function(data) {
-        console.log('didRangeBeaconsInRegion: ' + JSON.stringify(data.region.identifier + ' : Prox : ' + data.beacons[0].proximity + ' - rssi: ' + data.beacons[0].rssi + ' - tx: ' + data.beacons[0].tx + ' - accuracy: ' + data.beacons[0].accuracy));
+        // console.log('didRangeBeaconsInRegion: ' + JSON.stringify(data.region.identifier + ' : Prox : ' + data.beacons[0].proximity + ' - rssi: ' + data.beacons[0].rssi + ' - tx: ' + data.beacons[0].tx + ' - accuracy: ' + data.beacons[0].accuracy));
       };
     };
     $ionicPlatform.ready(function() {
       self.startScanForBeacons();
     });
 
-    Db.importMap(123);
+    Db.importMap('73676723-7400-0000-FFFF-0000FFFF0005').then(function(response) {
+      console.log("Hello");
+
+      console.log(JSON.stringify(response));
+      self.svg.svg(response.data.svg_code);
+
+    },function(response) {
+      console.log(JSON.stringify(response));
+    });
   }
 })();
