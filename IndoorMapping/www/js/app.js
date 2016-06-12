@@ -3,9 +3,10 @@ var app = angular.module('IndoorMapping', ['ionic','Devise'])
  app.config([
   '$stateProvider',
   '$urlRouterProvider',
+  //'$httpProvider',
   'AuthProvider',
   function($stateProvider,$urlRouterProvider,AuthProvider){
-
+    //$httpProvider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
     AuthProvider.registerPath('http://indoor-mapping.os34.tech/visitors.json');
     AuthProvider.registerMethod('POST');
     AuthProvider.loginPath('http://indoor-mapping.os34.tech/visitors/sign_in.json');
