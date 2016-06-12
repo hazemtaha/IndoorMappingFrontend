@@ -1,4 +1,4 @@
-var app = angular.module('IndoorMapping', ['ionic','Devise','ngCordovaBeacon'])
+var app = angular.module('IndoorMapping', ['ionic','Devise','ngCordovaBeacon']);
 
  app.config([
   '$stateProvider',
@@ -101,15 +101,13 @@ app.controller("mapCtrl",['$rootScope', '$ionicPlatform', '$cordovaBeacon', func
                         minor: 277
                       }
                       ];
-    self.startScanForBeacons = function(){
-        var locationManager =  cordova.plugins.locationManager;
-        for (var i = 0; i < self.beacons.length; i++) {
-        var beaconRegion = new locationManager.BeaconRegion(self.beacons[i].id,self.beacons[i].uuid, self.beacons[i].major, self.beacons[i].minor);
-        locationManager.startMonitoringForRegion(beaconRegion).fail(console.error).done();
+
+  self.startScanForBeacons = function() {
+    var locationManager =  cordova.plugins.locationManager;
+    for (var i = 0; i < self.beacons.length; i++) {
+      var beaconRegion = new locationManager.BeaconRegion(self.beacons[i].id,self.beacons[i].uuid, self.beacons[i].major, self.beacons[i].minor);
+      locationManager.startMonitoringForRegion(beaconRegion).fail(console.error).done();
     }
-  $ionicPlatform.ready(function(){
-    self.startScanForBeacons();
-  });
     var delegate = new cordova.plugins.locationManager.Delegate();
     locationManager.setDelegate(delegate);
     console.log('self.delegate'+JSON.stringify(delegate));
@@ -120,9 +118,13 @@ app.controller("mapCtrl",['$rootScope', '$ionicPlatform', '$cordovaBeacon', func
       var state = pluginResult.state === 'CLRegionStateInside' ? true : false;
       var stateStr = state ? 'in' : 'out';
       console.log('self.stateStr'+stateStr);
+      console.log(JSON.stringify(beacon));
       //Write code to do whatever you want
     };
   };
+  $ionicPlatform.ready(function(){
+    self.startScanForBeacons();
+  });
 }]);
 
 
