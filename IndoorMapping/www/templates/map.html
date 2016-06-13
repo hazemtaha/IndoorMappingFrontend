@@ -1,0 +1,26 @@
+<ion-view view-title="Map">
+<ion-content >
+  <div class="list" ng-controller="MapCtrl as mapCtrl">
+      <div class="item" ng-repeat="value in mapCtrl.beacons">
+          <div class="row">
+              <div class="col truncate">
+                  {{value.uuid}}
+              </div>
+          </div>
+          <div class="row">
+              <div class="col">
+                  major: {{value.major}}
+              </div>
+              <div class="col">
+                  minor: {{value.minor}}
+              </div>
+          </div>
+          <div class="row">
+              <div class="col">
+                  {{value.id}}
+              </div>
+          </div>
+      </div>
+  </div>
+</ion-content>
+</ion-view>
