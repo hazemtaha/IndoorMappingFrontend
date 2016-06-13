@@ -124,7 +124,9 @@ app.controller("mapCtrl", ['$rootScope', '$ionicPlatform', '$cordovaBeacon', fun
       //Write code to do whatever you want
     };
     delegate.didRangeBeaconsInRegion = function(data) {
-      console.log('didRangeBeaconsInRegion: ' + JSON.stringify(data.region.identifier+' : Prox : '+data.beacons[0].proximity + ' - rssi: '+ data.beacons[0].rssi + ' - tx: '+ data.beacons[0].tx +' - accuracy: '+ data.beacons[0].accuracy));
+
+       console.log('didRangeBeaconsInRegion: ' + JSON.stringify(data.region.identifier+' : Prox : '+data.beacons[0].proximity + ' - rssi: '+ data.beacons[0].rssi + ' - tx: '+ data.beacons[0].tx +' - accuracy: '+ data.beacons[0].accuracy));
+
     };
   };
   $ionicPlatform.ready(function() {
