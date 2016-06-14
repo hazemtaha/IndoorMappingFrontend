@@ -1,16 +1,25 @@
 <ion-view view-title="Login">
 <ion-content>
-	<div class="list">
+<div class="list">
+<div ng-controller="AuthCtrl as authCtrl">
+  <form name="visitorForm" ng-submit="authCtrl.login()">
+  <div ng-show="authCtrl.errorMsg">
+  <span>{{authCtrl.errorMsg}}</span>
+</div>
   <label class="item item-input">
-    <span class="input-label">Username</span>
-    <input type="text">
+    <span class="input-label">Email</span>
+    <input type="text" name="email" ng-model="authCtrl.user.email" required>
+    <span ng-show="visitorForm.email.$invalid && visitorForm.email.$dirty">Email is required *</span>
   </label>
   <label class="item item-input">
     <span class="input-label">Password</span>
-    <input type="password">
+    <input type="password" name="password" ng-model="authCtrl.user.password" required>
+    <span ng-show="visitorForm.password.$invalid && visitorForm.password.$dirty">Password is required *</span>
   </label>
  <div align="center">
-<a href="" class="button button-medium button-positive">Login</a>
+  <input type="submit" class="button button-medium button-positive" ng-disabled="visitorForm.$invalid" value="Login">
+</div>
+</form>
 </div>
 </div>
 </ion-content>

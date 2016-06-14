@@ -11,7 +11,8 @@
     function db($http) {
         var db = {
             importMap: importMap,
-            registerVisitor: registerVisitor
+            registerVisitor: registerVisitor,
+            loginVisitor: loginVisitor
         };
 
         return db;
@@ -23,6 +24,11 @@
 
         function registerVisitor(user){
             return $http.post('http://indoor-mapping.os34.tech/visitors.json',user);
+            //return $http.post('http://localhost:3000/visitors.json',user);
+        }
+
+        function loginVisitor(user){
+            return $http.post('http://indoor-mapping.os34.tech/visitors/login.json',user);
         }
     }
 })();

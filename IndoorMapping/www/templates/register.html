@@ -3,6 +3,9 @@
 	<div class="list">
   <div ng-controller="AuthCtrl as authCtrl">
   <form name="visitorForm" ng-submit="authCtrl.register()">
+  <div ng-show="authCtrl.errorMsg">
+  <span>{{authCtrl.errorMsg}}</span>
+</div>
   <label class="item item-input item-stacked-label">
     <span class="input-label">Username</span>
     <input type="text" name="username" ng-model="authCtrl.user.username" required>
