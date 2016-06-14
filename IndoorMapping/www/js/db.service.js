@@ -13,13 +13,16 @@
             importMap: importMap,
             registerVisitor: registerVisitor,
             loginVisitor: loginVisitor
+            getBeacons: getBeacons
         };
 
         return db;
 
         function importMap(beaconUUID) {
-          console.log(beaconUUID);
-            // return $http.get('/svg/beacon/'+beaconUUID+'.json');
+            return $http.get('http://indoor-mapping.os34.tech/svg/beacon/'+beaconUUID+'.json');
+        }
+        function getBeacons() {
+          return $http.get('http://indoor-mapping.os34.tech/beacons.json');
         }
 
         function registerVisitor(user){

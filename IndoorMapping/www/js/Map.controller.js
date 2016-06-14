@@ -10,20 +10,81 @@
   /* @ngInject */
   function mapCtrl($rootScope, $ionicPlatform, $cordovaBeacon, Db) {
     var self = this;
-    self.beacons = [{
-      id: 'zone1',
-      uuid: '73676723-7400-0000-FFFF-0000FFFF0005',
-      major: 2,
-      minor: 746
-    }, {
-      id: 'zone2',
-      uuid: '73676723-7400-0000-FFFF-0000FFFF0001',
-      major: 2,
-      minor: 277
-    }];
+    self.svg = SVG('drawing').size('1000', '1000');
+    // self.beacons = [{
+    //   id: 'zone1',
+    //   uuid: '73676723-7400-0000-FFFF-0000FFFF0005',
+    //   major: 2,
+    //   minor: 746
+    // }, {
+    //   id: 'zone2',
+    //   uuid: '73676723-7400-0000-FFFF-0000FFFF0001',
+    //   major: 2,
+    //   minor: 277
+    // }];
+    // console.log(JSON.stringify(self.beacons));
+    self.intersection = function(x0, y0, r0, x1, y1, r1) {
+      var a, dx, dy, d, h, rx, ry;
+      var x2, y2;
 
+      /* dx and dy are the vertical and horizontal distances between
+       * the circle centers.
+       */
+      dx = x1 - x0;
+      dy = y1 - y0;
+
+      /* Determine the straight-line distance between the centers. */
+      d = Math.sqrt((dy * dy) + (dx * dx));
+
+      /* Check for solvability. */
+      if (d > (r0 + r1)) {
+        /* no solution. circles do not intersect. */
+        return false;
+      }
+      if (d < Math.abs(r0 - r1)) {
+        /* no solution. one circle is contained in the other */
+        return false;
+      }
+
+      /* 'point 2' is the point where the line through the circle
+       * intersection points crosses the line between the circle
+       * centers.
+       */
+
+      /* Determine the distance from point 0 to point 2. */
+      a = ((r0 * r0) - (r1 * r1) + (d * d)) / (2.0 * d);
+
+      /* Determine the coordinates of point 2. */
+      x2 = x0 + (dx * a / d);
+      y2 = y0 + (dy * a / d);
+
+      /* Determine the distance from point 2 to either of the
+       * intersection points.
+       */
+      h = Math.sqrt((r0 * r0) - (a * a));
+
+      /* Now determine the offsets of the intersection points from
+       * point 2.
+       */
+      rx = -dy * (h / d);
+      ry = dx * (h / d);
+
+      /* Determine the absolute intersection points. */
+      var xi = x2 + rx;
+      var xi_prime = x2 - rx;
+      var yi = y2 + ry;
+      var yi_prime = y2 - ry;
+
+      return {
+        x1: xi,
+        x2: xi_prime,
+        y1: yi,
+        y2: yi_prime
+      };
+    }
     self.startScanForBeacons = function() {
       var locationManager = cordova.plugins.locationManager;
+      // console.log(JSON.stringify(self.beacons));
       for (var i = 0; i < self.beacons.length; i++) {
         var beaconRegion = new locationManager.BeaconRegion(self.beacons[i].id, self.beacons[i].uuid, self.beacons[i].major, self.beacons[i].minor);
         locationManager.startMonitoringForRegion(beaconRegion).fail(console.error).done();
@@ -31,27 +92,36 @@
       }
       var delegate = new cordova.plugins.locationManager.Delegate();
       locationManager.setDelegate(delegate);
-      console.log('self.delegate' + JSON.stringify(delegate));
       // Detect beacon callback
       delegate.didDetermineStateForRegion = function(pluginResult) {
         var beacon = pluginResult.region;
-        // console.log('self.beacon' + JSON.stringify(beacon));
         var state = pluginResult.state === 'CLRegionStateInside' ? true : false;
         var stateStr = state ? 'in' : 'out';
-        // console.log('self.stateStr' + stateStr);
-        // console.log(JSON.stringify(beacon));
-        console.log("did determine state for region " + JSON.stringify(pluginResult));
-
         //Write code to do whatever you want
       };
+      var rssiObj = {};
       delegate.didRangeBeaconsInRegion = function(data) {
-        console.log('didRangeBeaconsInRegion: ' + JSON.stringify(data.region.identifier + ' : Prox : ' + data.beacons[0].proximity + ' - rssi: ' + data.beacons[0].rssi + ' - tx: ' + data.beacons[0].tx + ' - accuracy: ' + data.beacons[0].accuracy));
+          console.log('didRangeBeaconsInRegion: ' + JSON.stringify(data.region.identifier + ' : Prox : ' + data.beacons[0].proximity + ' - rssi: ' + data.beacons[0].rssi + ' - tx: ' + data.beacons[0].tx + ' - accuracy: ' + data.beacons[0].accuracy));
+          // var ratio_db = data.beacons[0].tx - data.beacons[0].rssi;
+          // var ratio_linear = Math.pow(10, ratio_db / 10);
+
+          // var r = Math.sqrt(ratio_linear);
+          // console.log(data.region.identifier +'   '+ r);
+          // console.log(data.region.identifier +'   '+ data.beacons[0].rssi);
+        }
       };
     };
     $ionicPlatform.ready(function() {
-      self.startScanForBeacons();
+      Db.getBeacons().then(function(response) {
+        self.beacons = response.data.beacons;
+        self.startScanForBeacons();
+      }, function(error) {
+        // console.log(JSON.stringify(error));
+      });
     });
 
-    Db.importMap(123);
+    Db.importMap('73676723-7400-0000-FFFF-0000FFFF0005').then(function(response) {
+      self.svg.svg(response.data.svg_code);
+    });
   }
 })();
