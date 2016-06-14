@@ -49,24 +49,30 @@
         // console.log('didRangeBeaconsInRegion: ' + JSON.stringify(data.region.identifier + ' : Prox : ' + data.beacons[0].proximity + ' - rssi: ' + data.beacons[0].rssi + ' - tx: ' + data.beacons[0].tx + ' - accuracy: ' + data.beacons[0].accuracy));
         // console.log("proximity"+JSON.stringify(data.beacons[0].proximity));
         //console.log(JSON.stringify(data));
-        // if(JSON.stringify(data.beacons[0].proximity == "ProximityNear"))
-        // {
-        //   //console.log("data  "+JSON.stringify(data.region.uuid));
-        // }
+        if(data.beacons[0].proximity == "ProximityNear")
+         {
+           console.log("data  "+JSON.stringify(data.region.uuid));
+           var beaconUuid = JSON.stringify(data.region.uuid);
+           Db.importMap(data.region.uuid).then(function(response) {
+             console.log("Hello1");
+
+             //console.log(JSON.stringify(response));
+             self.svg.svg(response.data.svg_code);
+
+           },function(response) {
+             //console.log(JSON.stringify(response));
+              console.log("Hello2");
+           });
+         }
+         else {
+           console.log("hello3");
+         }
       };
     };
     $ionicPlatform.ready(function() {
       self.startScanForBeacons();
     });
 
-    Db.importMap('73676723-7400-0000-FFFF-0000FFFF0005').then(function(response) {
-      console.log("Hello");
 
-      console.log(JSON.stringify(response));
-      self.svg.svg(response.data.svg_code);
-
-    },function(response) {
-      console.log(JSON.stringify(response));
-    });
   }
 })();
