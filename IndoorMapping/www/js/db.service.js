@@ -10,13 +10,17 @@
     /* @ngInject */
     function db($http) {
         var db = {
-            importMap: importMap
+            importMap: importMap,
+            getBeacons: getBeacons
         };
 
         return db;
 
         function importMap(beaconUUID) {
             return $http.get('http://indoor-mapping.os34.tech/svg/beacon/'+beaconUUID+'.json');
+        }
+        function getBeacons() {
+          return $http.get('http://indoor-mapping.os34.tech/beacons.json');
         }
     }
 })();
