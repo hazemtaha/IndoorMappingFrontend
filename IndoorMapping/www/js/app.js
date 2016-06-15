@@ -1,16 +1,9 @@
-angular.module('IndoorMapping', ['ionic', 'Devise', 'ngCordovaBeacon'])
+angular.module('IndoorMapping', ['ionic','ngCordovaBeacon'])
 
 .config([
     '$stateProvider',
     '$urlRouterProvider',
-    'AuthProvider',
-    function($stateProvider, $urlRouterProvider, AuthProvider) {
-
-      AuthProvider.registerPath('http://indoor-mapping.os34.tech/visitors.json');
-      AuthProvider.registerMethod('POST');
-      AuthProvider.loginPath('http://indoor-mapping.os34.tech/visitors/sign_in.json');
-      AuthProvider.loginMethod('POST');
-
+    function($stateProvider, $urlRouterProvider) {
 
       $stateProvider
 
@@ -23,24 +16,14 @@ angular.module('IndoorMapping', ['ionic', 'Devise', 'ngCordovaBeacon'])
         url: '/login',
         templateUrl: 'templates/login.html',
         controller: 'AuthCtrl',
-        controllerAs: "authCtrl",
-        onEnter: ['$state', 'Auth', function($state, Auth) {
-          Auth.currentUser().then(function() {
-            $state.go('/home');
-          })
-        }]
+        controllerAs: "authCtrl"
       })
 
       .state('register', {
         url: '/register',
         templateUrl: 'templates/register.html',
         controller: 'AuthCtrl',
-        controllerAs: "authCtrl",
-        onEnter: ['$state', 'Auth', function($state, Auth) {
-          Auth.currentUser().then(function() {
-            $state.go('/home');
-          })
-        }]
+        controllerAs: "authCtrl"
       })
 
       // map
