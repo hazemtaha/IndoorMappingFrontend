@@ -22,6 +22,29 @@
     //   major: 2,
     //   minor: 277
     // }];
+    self.getNearestBeacon = function(targetBeacon, beaconsInRange) {
+      var nearestBeacon, tmpDistance;
+      angular.forEach(beaconsInRange, function(beacon) {
+        var distance = Math.sqrt(Math.pow(targetBeacon.x - beacon.x, 2) + Math.pow(targetBeacon.y - beacon.y, 2));
+        if (!tmpDistance) {
+          tmpDistance = distance;
+          nearestBeacon = beacon;
+        } else if (distance < tmpDistance) {
+          tmpDistance = distance;
+          nearestBeacon = beacon;
+        }
+      });
+      return nearestBeacon;
+    }
+    self.drawPath = function(sourceBeacon, destinationBeacon) {
+      // var pathPoint = self.svg.circle(20).attr('fill', '#98bdc5').move(targetBeacon.x, targetBeacon.y);
+      // write here
+      if (sourceBeacon.x == destinationBeacon.x) {
+        if (sourceBeacon.y ) {
+
+        }
+      }
+    }
     self.startScanForBeacons = function() {
       var locationManager = cordova.plugins.locationManager;
       for (var i = 0; i < self.beacons.length; i++) {
@@ -40,15 +63,20 @@
         //Write code to do whatever you want
       };
       self.beaconsInRange = {};
+      self.beaconsInFarRange = {};
       var isVisitedB4 = false;
       delegate.didRangeBeaconsInRegion = function(data) {
         var proximity = data.beacons[0].proximity;
         var accuracy = data.beacons[0].accuracy;
         if (proximity == "ProximityFar") {
           delete self.beaconsInRange[data.region.uuid];
+          self.beaconsInFarRange[data.region.uuid];
         }
         var targetBeacon;
         if (proximity == "ProximityNear" || proximity == "ProximityImmediate") {
+          if (self.beaconsInFarRange[data.region.uuid]) {
+            delete self.beaconsInFarRange[data.region.uuid];
+          }
           Db.importMap(data.region.uuid).then(function(response) {
             self.beacons.forEach(function(beacon) {
               if (beacon.uuid.toUpperCase() == data.region.uuid.toUpperCase()) {
@@ -86,6 +114,7 @@
                 beacon.isVisitedB4 = false;
               });
             }, ((60 * 1000) * 30));
+            // start drawing
             self.svg.circle(20).attr('fill', '#98bdc5').move(targetBeacon.x, targetBeacon.y);
 
           }, function(response) {
