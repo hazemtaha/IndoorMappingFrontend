@@ -110,7 +110,6 @@
            var beaconUuid = JSON.stringify(data.region.uuid);
            Db.importMap(data.region.uuid).then(function(response) {
              console.log("Hello1");
-
              //console.log(JSON.stringify(response));
              console.log(JSON.stringify(self.beacons));
              var targetBeacon;
