@@ -12,8 +12,9 @@
         var db = {
             importMap: importMap,
             registerVisitor: registerVisitor,
-            loginVisitor: loginVisitor
-            getBeacons: getBeacons
+            loginVisitor: loginVisitor,
+            getBeacons: getBeacons,
+            registerVisit: registerVisit
         };
 
         return db;
@@ -32,6 +33,10 @@
 
         function loginVisitor(user){
             return $http.post('http://indoor-mapping.os34.tech/visitors/login.json',user);
+        }
+
+        function registerVisit(visitorId, beacnUuid) {
+          return $http.post('http://indoor-mapping.os34.tech/beacon/'+beacnUuid+'/visit.json',{ visitor_id: visitorId });
         }
     }
 })();
