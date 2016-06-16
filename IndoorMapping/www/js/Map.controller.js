@@ -36,15 +36,78 @@
       });
       return nearestBeacon;
     }
+    var pointsArr = [];
     self.drawPath = function(sourceBeacon, destinationBeacon) {
       // var pathPoint = self.svg.circle(20).attr('fill', '#98bdc5').move(targetBeacon.x, targetBeacon.y);
       // write here
-      if (sourceBeacon.x == destinationBeacon.x) {
-        if (sourceBeacon.y ) {
 
+      var slope,step;
+      if (sourceBeacon.x == destinationBeacon.x) {
+        if (sourceBeacon.y < destinationBeacon.y) {
+          step = 1;
+          var newSourceBeacon = {y: sourceBeacon.y};
+          while(newSourceBeacon.y<destinationBeacon.y){
+            newSourceBeacon.y = newSourceBeacon.y+step;
+            pointsArr.push({x:sourceBeacon.x,y:newSourceBeacon.y});
+          }
+        }
+        else {
+          step = -1;
+          var newSourceBeacon = {y: sourceBeacon.y};
+          while(newSourceBeacon.y>destinationBeacon.y){
+            newSourceBeacon.y = newSourceBeacon.y+step;
+            pointsArr.push({x:sourceBeacon.x,y:newSourceBeacon.y});
+          }
         }
       }
+      else if (sourceBeacon.y == destinationBeacon.y) {
+        if (sourceBeacon.x < destinationBeacon.x) {
+          step = 1;
+          var newSourceBeacon = {x: sourceBeacon.x};
+          while(newSourceBeacon.x<destinationBeacon.x){
+            newSourceBeacon.x = newSourceBeacon.x+step;
+            pointsArr.push({x:newSourceBeacon.x,y:sourceBeacon.y});
+          }
+        }
+        else {
+          step = -1;
+          var newSourceBeacon = {x: sourceBeacon.x};
+          while(newSourceBeacon.x>destinationBeacon.x){
+            newSourceBeacon.x = newSourceBeacon.x+step;
+            pointsArr.push({x:newSourceBeacon.x,y:sourceBeacon.y});
+          }
+        }
+      }
+      else if (sourceBeacon.y<destinationBeacon.y) {
+        slope = (destinationBeacon.y-sourceBeacon.y)/(destinationBeacon.x - sourceBeacon.x);
+        step = 1;
+        var newSourceBeacon = {x: sourceBeacon.x, y:sourceBeacon.y};
+        while(newSourceBeacon.y<destinationBeacon.y){
+          newSourceBeacon.y = newSourceBeacon.y+step;
+          newSourceBeacon.x = (1/slope)*newSourceBeacon.y-(sourceBeacon.y/slope)+sourceBeacon.x;
+          pointsArr.push(newSourceBeacon);
+        }
+      }
+      else {
+        slope = (destinationBeacon.y-sourceBeacon.y)/(destinationBeacon.x - sourceBeacon.x);
+        step = -1;
+        var newSourceBeacon = {x: sourceBeacon.x, y:sourceBeacon.y};
+        while(newSourceBeacon.y>destinationBeacon.y){
+          newSourceBeacon.y = newSourceBeacon.y+step;
+          newSourceBeacon.x = (1/slope)*newSourceBeacon.y-(sourceBeacon.y/slope)+sourceBeacon.x;
+          pointsArr.push(newSourceBeacon);
+        }
+      }
+      return pointsArr;
     }
+
+    var move = function(arr,person){
+      angular.forEach(arr,function(point){
+        person.move(point.x,point.y);
+        });
+      }
+
+
     self.startScanForBeacons = function() {
       var locationManager = cordova.plugins.locationManager;
       for (var i = 0; i < self.beacons.length; i++) {
@@ -66,10 +129,12 @@
       self.beaconsInFarRange = {};
       var isVisitedB4 = false;
       delegate.didRangeBeaconsInRegion = function(data) {
+        console.log("data"+JSON.stringify(data));
         var proximity = data.beacons[0].proximity;
         var accuracy = data.beacons[0].accuracy;
         if (proximity == "ProximityFar") {
           delete self.beaconsInRange[data.region.uuid];
+          console.log("self.beaconsInFarRange"+JSON.stringify(self.beaconsInFarRange));
           self.beaconsInFarRange[data.region.uuid];
         }
         var targetBeacon;
@@ -115,7 +180,11 @@
               });
             }, ((60 * 1000) * 30));
             // start drawing
-            self.svg.circle(20).attr('fill', '#98bdc5').move(targetBeacon.x, targetBeacon.y);
+            var destBeacon = self.getNearestBeacon(targetBeacon,self.beaconsInFarRange);
+            console.log("destBeacon"+JSON.stringify(self.beaconsInFarRange));
+            var targetPerson = self.svg.circle(20).attr('fill', '#98bdc5').move(targetBeacon.x, targetBeacon.y);
+            var pointArr = self.drawPath(targetBeacon,destBeacon);
+            self.move(pointArr,targetBeacon);
 
           }, function(response) {
             console.log(response);
