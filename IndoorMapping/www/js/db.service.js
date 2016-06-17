@@ -13,7 +13,8 @@
             importMap: importMap,
             registerVisitor: registerVisitor,
             loginVisitor: loginVisitor,
-            getBeacons: getBeacons
+            getBeacons: getBeacons,
+            registerVisit: registerVisit
         };
 
         return db;
@@ -26,12 +27,17 @@
         }
 
         function registerVisitor(user){
-            return $http.post('http://indoor-mapping.os34.tech/visitors.json',user);
-            //return $http.post('http://localhost:3000/visitors.json',user);
+            //return $http.post('http://indoor-mapping.os34.tech/visitors.json',user);
+            return $http.post('http://localhost:3000/visitors.json',user);
         }
 
         function loginVisitor(user){
-            return $http.post('http://indoor-mapping.os34.tech/visitors/login.json',user);
+            return $http.post('http://localhost:3000/visitors/login.json',user);
+            //return $http.post('http://indoor-mapping.os34.tech/visitors/login.json',user);
+        }
+
+        function registerVisit(visitorId, beacnUuid) {
+          return $http.post('http://indoor-mapping.os34.tech/beacon/'+beacnUuid+'/visit.json',{ visitor_id: visitorId });
         }
     }
 })();

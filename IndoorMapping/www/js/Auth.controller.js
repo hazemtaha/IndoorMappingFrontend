@@ -11,7 +11,7 @@
     function authCtrl($state,Db) {
         var self = this;
         self.user = {};
-        
+
         self.isAuthenticated = function() {
           //return Auth.isAuthenticated();
         }
@@ -21,9 +21,11 @@
         self.register = function() {
             console.log(self.user);
           Db.registerVisitor(self.user).then(function(response){
+            console.log(JSON.stringify(response));
               if(response.data.errorMsg == "Email or Username already exists"){
                   self.errorMsg = response.data.errorMsg;
               }else{
+              window.localStorage.setItem("userId", response.data.visitor.id);
               window.localStorage.setItem("username", self.user.username);
               window.localStorage.setItem("password", self.user.encrypted_password);
               $state.go('home');
@@ -41,7 +43,7 @@
               window.localStorage.setItem("username", self.user.username);
               window.localStorage.setItem("password", self.user.encrypted_password);
               $state.go('home');
-            }   
+            }
             });
         };
 
