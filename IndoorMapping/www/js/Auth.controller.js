@@ -22,7 +22,7 @@
             console.log(self.user);
           Db.registerVisitor(self.user).then(function(response){
             console.log(JSON.stringify(response));
-              if(response.data.errorMsg == "Email or Username already exists"){
+              if(response.data.errorMsg == "Email or Username already exists" || response.data.errorMsg == "Password not match with the confirmation"){
                   self.errorMsg = response.data.errorMsg;
               }else{
               window.localStorage.setItem("userId", response.data.visitor.id);

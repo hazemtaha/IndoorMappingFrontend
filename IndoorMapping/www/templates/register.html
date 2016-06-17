@@ -22,6 +22,11 @@
     <span ng-show="visitorForm.password.$invalid && visitorForm.password.$dirty">Password is required *</span>
   </label>
   <label class="item item-input item-stacked-label">
+    <span class="input-label">Confirm your password</span>
+    <input type="password" name="password" ng-model="authCtrl.user.password_confirmation" required>
+    <span ng-show="visitorForm.password.$invalid && visitorForm.password.$dirty">Password confirmation is required *</span>
+  </label>
+  <label class="item item-input item-stacked-label">
     <span class="input-label">Date Of Birth</span>
     <input type="date" name="dob" ng-model="authCtrl.user.dob" required>
     <span ng-show="visitorForm.dob.$invalid && visitorForm.dob.$dirty">DateOfBirth is required *</span>
