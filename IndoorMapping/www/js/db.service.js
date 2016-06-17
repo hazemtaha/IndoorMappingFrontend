@@ -12,7 +12,7 @@
         var db = {
             importMap: importMap,
             registerVisitor: registerVisitor,
-            loginVisitor: loginVisitor
+            loginVisitor: loginVisitor,
             getBeacons: getBeacons
         };
 
