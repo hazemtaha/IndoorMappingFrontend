@@ -1,8 +1,8 @@
 <ion-view view-title="Indoor Mapping">
 <ion-content>
-  <div class="row responsive-sm">
+  <div class="row responsive-sm" ng-controller="AuthCtrl as authCtrl">
   	<div class="col"><h2 class="title">Welcome To Indoor Mapping</h2></div>
-  	<div class="col" align="center"><a href="/#/login" class="button button-positive">Login</a> <a href="/#/register" class="button button-positive">Register</a> <a href="/#/map" class="button button-positive">map</a></div>
+  	<div class="col" align="center"><a href="/#/login" class="button button-positive" ng-hide="authCtrl.isLoggedIn()">Login</a> <a href="/#/register" class="button button-positive" ng-hide="authCtrl.isLoggedIn()">Register</a> <a href="/#/map" class="button button-positive" ng-show="authCtrl.isLoggedIn()">map</a><button ng-click="authCtrl.logout()" class="button button-positive" ng-show="authCtrl.isLoggedIn()">Logout</button></div>
   </div>
 </ion-content>
 </ion-view>

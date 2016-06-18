@@ -22,7 +22,7 @@
             console.log(self.user);
           Db.registerVisitor(self.user).then(function(response){
             console.log(JSON.stringify(response));
-              if(response.data.errorMsg == "Email or Username already exists"){
+              if(response.data.errorMsg == "Email or Username already exists" || response.data.errorMsg == "Password not match with the confirmation"){
                   self.errorMsg = response.data.errorMsg;
               }else{
               window.localStorage.setItem("userId", response.data.visitor.id);
@@ -40,6 +40,7 @@
                 if(response.data.errorMsg == "Invalid email or password"){
                   self.errorMsg = response.data.errorMsg;
               }else{
+              window.localStorage.setItem("userId", response.data.visitor.id);
               window.localStorage.setItem("username", self.user.username);
               window.localStorage.setItem("password", self.user.encrypted_password);
               $state.go('home');
@@ -48,12 +49,20 @@
         };
 
         self.isLoggedIn = function() {
-        if(window.localStorage.getItem("username") !== undefined && window.localStorage.getItem("password") !== undefined) {
+        if(window.localStorage.getItem("username") != undefined && window.localStorage.getItem("password") != undefined) {
             return true;
         } else {
             return false;
         }
     };
+
+        self.logout = function(){
+              window.localStorage.removeItem("userId");
+              window.localStorage.removeItem("username");
+              window.localStorage.removeItem("password");
+              
+               $state.transitionTo($state.current)
+        };
 
       }
 })();

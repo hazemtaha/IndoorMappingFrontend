@@ -43,10 +43,12 @@
       self.beaconsInFarRange = {};
       var isVisitedB4 = false;
       delegate.didRangeBeaconsInRegion = function(data) {
+        console.log("data" + JSON.stringify(data));
         var proximity = data.beacons[0].proximity;
         var accuracy = data.beacons[0].accuracy;
         if (proximity == "ProximityFar") {
           delete self.beaconsInRange[data.region.uuid];
+          console.log("self.beaconsInFarRange" + JSON.stringify(self.beaconsInFarRange));
           self.beaconsInFarRange[data.region.uuid];
         }
         var targetBeacon;
