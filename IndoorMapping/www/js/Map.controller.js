@@ -21,7 +21,15 @@
       uuid: '73676723-7400-0000-FFFF-0000FFFF0001',
       major: 2,
       minor: 277
-    }];
+    }];    
+    // Db.getBeacons().then(function(response) {
+    //   console.log("gggggggggggggg");
+    //   console.log(response);
+    //   // self.beacons = 
+    // },function(response) {
+    // });
+
+
 
     self.startScanForBeacons = function() {
       var locationManager = cordova.plugins.locationManager;
@@ -57,7 +65,14 @@
       console.log("Hello");
 
       console.log(JSON.stringify(response));
-      self.svg.svg(response.data.svg_code);
+        console.log(response.data.svg_code);
+        // self.svg.svg(response.data.svg_code);
+        // self.svg.svg(response.data.svg_code+'<polyline fill="none" stroke="blue" stroke-width="2" points="05,30 15,30 15,20  25,20 25,10 35,10" />');
+        
+        console.log("---------------------------------------");
+        // console.log( self.svg.select("[name = beacon]"));
+
+      self.svg.svg(response.data.svg_code+'<circle cx="25" cy="25" r="15" fill="purple" />');
 
     },function(response) {
       console.log(JSON.stringify(response));
