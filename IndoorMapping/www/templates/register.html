@@ -3,28 +3,41 @@
 	<div class="list">
   <div ng-controller="AuthCtrl as authCtrl">
   <form name="visitorForm" ng-submit="authCtrl.register()">
-  <label class="item item-input item-stacked-label">
+  <div ng-show="authCtrl.errorMsg">
+  <span>{{authCtrl.errorMsg}}</span>
+  <br>
+<br>
+<h4>Register</h4>
+<br>
+</div>
+  <label class="item item-input item-floating-label">
     <span class="input-label">Username</span>
-    <input type="text" name="username" ng-model="authCtrl.user.username" required>
+    <input type="text" name="username" ng-model="authCtrl.user.username" required placeholder="UserName">
     <span ng-show="visitorForm.username.$invalid && visitorForm.username.$dirty">Username is required *</span>
   </label>
-  <label class="item item-input item-stacked-label">
+  <label class="item item-input item-floating-label">
     <span class="input-label">Email</span>
-    <input type="email" name="email" ng-model="authCtrl.user.email" required>
+    <input type="email" name="email" ng-model="authCtrl.user.email" required placeholder="Email">
     <span ng-show="visitorForm.email.$invalid && visitorForm.email.$dirty">Email is required *</span>
   </label>
-  <label class="item item-input item-stacked-label">
+  <label class="item item-input item-floating-label">
     <span class="input-label">Password</span>
-    <input type="password" name="password" ng-model="authCtrl.user.password" required>
+    <input type="password" name="password" ng-model="authCtrl.user.encrypted_password" required placeholder="Password">
     <span ng-show="visitorForm.password.$invalid && visitorForm.password.$dirty">Password is required *</span>
   </label>
-  <label class="item item-input item-stacked-label">
+  <label class="item item-input item-floating-label">
+    <span class="input-label">Confirm your password</span>
+    <input type="password" name="password" ng-model="authCtrl.user.password_confirmation" required placeholder="Confirm password">
+    <span ng-show="visitorForm.password.$invalid && visitorForm.password.$dirty">Password confirmation is required *</span>
+  </label>
+  <label class="item item-input item-floating-label">
     <span class="input-label">Date Of Birth</span>
-    <input type="date" name="dob" ng-model="authCtrl.user.dob" required>
+    <input type="date" name="dob" ng-model="authCtrl.user.dob" required placeholder="Dateofbirth">
     <span ng-show="visitorForm.dob.$invalid && visitorForm.dob.$dirty">DateOfBirth is required *</span>
   </label>
   <div align="center">
-  <input type="submit" class="button button-medium button-positive" ng-disabled="visitorForm.$invalid" value="Register">
+  <br><br>
+  <input type="submit" class="button button-block button-positive" ng-disabled="visitorForm.$invalid" value="Register">
 </div>
 </form>
 </div>

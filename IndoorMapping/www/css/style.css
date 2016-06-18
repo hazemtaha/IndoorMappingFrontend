@@ -1,1 +1,7 @@
 /* Empty. Add your own CSS if you like */
+ion-content , ion-nav-bar{
+	text-align: center;
+}
+body{
+	background: #333 ;
+}
