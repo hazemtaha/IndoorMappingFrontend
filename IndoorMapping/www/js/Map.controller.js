@@ -22,33 +22,10 @@
     //   major: 2,
     //   minor: 277
     // }];
-    self.getNearestBeacon = function(targetBeacon, beaconsInRange) {
-      var nearestBeacon, tmpDistance;
-      angular.forEach(beaconsInRange, function(beacon) {
-        var distance = Math.sqrt(Math.pow(targetBeacon.x - beacon.x, 2) + Math.pow(targetBeacon.y - beacon.y, 2));
-        if (!tmpDistance) {
-          tmpDistance = distance;
-          nearestBeacon = beacon;
-        } else if (distance < tmpDistance) {
-          tmpDistance = distance;
-          nearestBeacon = beacon;
-        }
-      });
-      return nearestBeacon;
-    }
-    self.drawPath = function(sourceBeacon, destinationBeacon) {
-      // var pathPoint = self.svg.circle(20).attr('fill', '#98bdc5').move(targetBeacon.x, targetBeacon.y);
-      // write here
-      if (sourceBeacon.x == destinationBeacon.x) {
-        if (sourceBeacon.y ) {
-
-        }
-      }
-    }
     self.startScanForBeacons = function() {
       var locationManager = cordova.plugins.locationManager;
       for (var i = 0; i < self.beacons.length; i++) {
-        console.log(JSON.stringify(self.beacons));
+        // console.log(JSON.stringify(self.beacons));
         var beaconRegion = new locationManager.BeaconRegion(self.beacons[i].id, self.beacons[i].uuid, self.beacons[i].major, self.beacons[i].minor);
         locationManager.startMonitoringForRegion(beaconRegion).fail().done();
         locationManager.startRangingBeaconsInRegion(beaconRegion).fail().done();
@@ -92,10 +69,9 @@
                 self.beaconsInRange[targetBeacon.uuid] = targetBeacon;
               }
             });
-            console.log(JSON.stringify(targetBeacon.id) + ' - ' + data.beacons[0].accuracy + ' ' + data.beacons[0].proximity);
+            // console.log(JSON.stringify(targetBeacon.id) + ' - ' + data.beacons[0].accuracy + ' ' + data.beacons[0].proximity);
 
             self.svg.svg(response.data.svg_code);
-            // console.log(JSON.stringify(self.beaconsInRange));
             angular.forEach(self.beaconsInRange, function(beacon) {
               if (targetBeacon.proxValue < beacon.proxValue) {
                 targetBeacon = beacon;
@@ -108,7 +84,6 @@
               Db.registerVisit(userId, targetBeacon.uuid);
               targetBeacon.isVisitedB4 = true;
             }
-            console.log(targetBeacon.isVisitedB4);
             $timeout(function() {
               angular.forEach(self.beaconsInRange, function(beacon) {
                 beacon.isVisitedB4 = false;
@@ -116,7 +91,6 @@
             }, ((60 * 1000) * 30));
             // start drawing
             self.svg.circle(20).attr('fill', '#98bdc5').move(targetBeacon.x, targetBeacon.y);
-
           }, function(response) {
             console.log(response);
           });

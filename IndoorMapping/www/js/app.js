@@ -25,7 +25,6 @@ angular.module('IndoorMapping', ['ionic','ngCordovaBeacon'])
         controller: 'AuthCtrl',
         controllerAs: "authCtrl"
       })
-
       // map
 
       .state('map', {

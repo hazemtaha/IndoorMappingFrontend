@@ -14,7 +14,8 @@
             registerVisitor: registerVisitor,
             loginVisitor: loginVisitor,
             getBeacons: getBeacons,
-            registerVisit: registerVisit
+            registerVisit: registerVisit,
+            callibrateBeacon: callibrateBeacon
         };
 
         return db;
@@ -37,6 +38,10 @@
 
         function registerVisit(visitorId, beacnUuid) {
           return $http.post('http://indoor-mapping.os34.tech/beacon/'+beacnUuid+'/visit.json',{ visitor_id: visitorId });
+        }
+        function callibrateBeacon(beaconUuid, lat, lon) {
+          console.log(lon);
+          return $http.post('http://indoor-mapping.os34.tech/beacon/'+beaconUuid+'/callibrate.json',{ lon: lon, lat: lat });
         }
     }
 })();
