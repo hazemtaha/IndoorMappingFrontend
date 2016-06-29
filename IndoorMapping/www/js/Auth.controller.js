@@ -50,6 +50,7 @@
 
         self.isLoggedIn = function() {
         if(window.localStorage.getItem("username") != undefined && window.localStorage.getItem("password") != undefined) {
+            self.user.username = (window.localStorage.getItem("username")) ;
             return true;
         } else {
             return false;
