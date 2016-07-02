@@ -42,14 +42,16 @@
       };
       self.beaconsInRange = {};
       self.beaconsInFarRange = {};
+      self.lnPoints = [];
+      self.pathBlocks = [];
       var isVisitedB4 = false;
       delegate.didRangeBeaconsInRegion = function(data) {
-        console.log("data" + JSON.stringify(data));
+        // console.log("data" + JSON.stringify(data));
         var proximity = data.beacons[0].proximity;
         var accuracy = data.beacons[0].accuracy;
         if (proximity == "ProximityFar") {
           delete self.beaconsInRange[data.region.uuid];
-          console.log("self.beaconsInFarRange" + JSON.stringify(self.beaconsInFarRange));
+          // console.log("self.beaconsInFarRange" + JSON.stringify(self.beaconsInFarRange));
           self.beaconsInFarRange[data.region.uuid];
         }
         var targetBeacon;
@@ -73,8 +75,66 @@
               }
             });
             // console.log(JSON.stringify(targetBeacon.id) + ' - ' + data.beacons[0].accuracy + ' ' + data.beacons[0].proximity);
-
-            self.svg.svg(response.data.svg_code);
+ // shortest path code
+            if (self.svg.attr('name') != response.data.id) {
+              self.svg.svg(response.data.svg_code);
+              self.svg.attr('name', response.data.id);
+              var grid = new PF.Grid(self.svg.width(), self.svg.height());
+              var blocks = self.svg.select('.map-element').members;
+              var shortestPath = {
+                from: {},
+                to: {}
+              };
+              blocks.forEach(function(block) {
+                if (block.attr('name') != 'beacon') {
+                  for (var x = block.bbox().x; x <= block.bbox().x2; x++) {
+                    for (var y = block.bbox().y; y <= block.bbox().y2; y++) {
+                      grid.setWalkableAt(x, y, false);
+                    }
+                  }
+                } else if (block.attr('name') == 'beacon') {
+                  block.remove();
+                }
+                block.on('click', function(ev) {
+                  // console.log("\n \n \n ------------------------Entered -------------------------------- \n \n \n ");
+                  self.pathBlocks.push({block: block, oldFill: block.attr('fill')});
+                  block.attr('fill', '#89c4f4');
+                  if (!Object.keys(shortestPath.from).length) {
+                    shortestPath.from.x = (block.bbox().cx + block.bbox().w / 2) + 1;
+                    shortestPath.from.y = block.bbox().cy;
+                  } else if (!Object.keys(shortestPath.to).length) {
+                    shortestPath.to.x = (block.bbox().cx + block.bbox().w / 2) + 1;
+                    shortestPath.to.y = block.bbox().cy;
+                  }
+                  if (Object.keys(shortestPath.from).length && Object.keys(shortestPath.to).length) {
+                    console.log("\n \n \n ------------------------Entered -------------------------------- \n \n \n ");
+                    console.log("\n \n \n ------------------------Entered -------------------------------- \n \n \n ");
+                    var finder = new PF.AStarFinder();
+                    self.gridBackup = grid.clone();
+                    console.log(JSON.stringify(shortestPath));
+                    var path = finder.findPath(shortestPath.from.x, shortestPath.from.y, shortestPath.to.x, shortestPath.to.y, grid);
+                    grid = self.gridBackup;
+                    if (self.lnPoints.length) {
+                      angular.forEach(self.lnPoints, function(lnPoint) {
+                        lnPoint.remove();
+                      })
+                    }
+                    self.lnPoints = [];
+                    console.log(JSON.stringify(path));
+                    for (var i = 0; i < (path.length - 1); i++) {
+                      self.lnPoints.push(self.svg.line(path[i][0], path[i][1], path[i + 1][0], path[i + 1][1]).stroke({
+                        width: 1
+                      }).attr('fill', '#98bdc5'));
+                    }
+                    shortestPath.from = {};
+                    shortestPath.to = {};
+                    self.pathBlocks[0].block.attr('fill', self.pathBlocks[0].oldFill)
+                    self.pathBlocks[1].block.attr('fill', self.pathBlocks[1].oldFill)
+                    self.pathBlocks = [];
+                  }
+                });
+              });
+            }
             angular.forEach(self.beaconsInRange, function(beacon) {
               if (targetBeacon.proxValue < beacon.proxValue) {
                 targetBeacon = beacon;
@@ -95,10 +155,10 @@
             // start drawing
             self.svg.circle(20).attr('fill', '#98bdc5').move(targetBeacon.x, targetBeacon.y);
           }, function(response) {
-            console.log(response);
+            // console.log(response);
           });
         } else {
-          console.log("Not In Range");
+          // console.log("Not In Range");
         }
       };
     };
