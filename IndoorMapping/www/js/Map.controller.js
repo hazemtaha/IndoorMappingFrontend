@@ -123,7 +123,7 @@
                     console.log(JSON.stringify(path));
                     for (var i = 0; i < (path.length - 1); i++) {
                       self.lnPoints.push(self.svg.line(path[i][0], path[i][1], path[i + 1][0], path[i + 1][1]).stroke({
-                        width: 1
+                        width: 5
                       }).attr('fill', '#98bdc5'));
                     }
                     shortestPath.from = {};

@@ -41,7 +41,7 @@
                   self.errorMsg = response.data.errorMsg;
               }else{
               window.localStorage.setItem("userId", response.data.visitor.id);
-              window.localStorage.setItem("username", self.user.username);
+              window.localStorage.setItem("username", self.user.email);
               window.localStorage.setItem("password", self.user.encrypted_password);
               $state.go('home');
             }
@@ -50,6 +50,7 @@
 
         self.isLoggedIn = function() {
         if(window.localStorage.getItem("username") != undefined && window.localStorage.getItem("password") != undefined) {
+            self.user.username = (window.localStorage.getItem("username")) ;
             return true;
         } else {
             return false;
@@ -60,7 +61,7 @@
               window.localStorage.removeItem("userId");
               window.localStorage.removeItem("username");
               window.localStorage.removeItem("password");
-              
+
                $state.transitionTo($state.current)
         };
 
